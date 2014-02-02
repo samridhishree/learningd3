@@ -59,21 +59,23 @@
 			.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var nameIndex = function(name) {
-		var names = {
-			A:1 , B:2, C:3, D:4, E:5, F:6, G:7, H:8, I:9, J:10,
-			K:11, L:12, M:13, N:14, O:15, P:16, Q:17, R:18, S:19, T:20,
-			U:21, V:22, W:23, X:24, Y:25, Z:26
-		};
+	d3.tsv("data.tsv", type, function(error, data) {
 
-		return names[name];
-	}
+		var letters = data.map(function(d) { return d.name; });
+		var letterMap = []
 
-	d3.tsv("data.tsv", type, function(error, data){
+		for(var i=0; i < letters.length; i++)
+		{
+			letterMap[letters[i]] = i;
+		}
+
+		var nameIndex = function(name) {																												
+			return letterMap[name];
+		}
 
 		x.domain(data.map(function(d) { return d.name; }));
 		y.domain([0, d3.max(data, function(d) { return d.value; } )]);
-
+		
 		chart.append("g")
 			 .attr("class", "x axis")
 			 .attr("transform", "translate(0," + height + ")")
@@ -88,7 +90,6 @@
 			 .attr("dy", ".20em")
 			 .style("text-anchor", "end")
 			 .text("Frequency");
-
 		
 		chart.selectAll(".bar")
 			 .data(data)
