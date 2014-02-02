@@ -30,6 +30,7 @@
 <h1>The Frequency Chart</h1>
 <svg class="chart"></svg>
 <br />
+<input type=	checkbox>Sort</input>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 	
@@ -57,6 +58,16 @@
 				.attr("height", height+margin.top+margin.bottom)
 			.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var nameIndex = function(name) {
+		var names = {
+			A:1 , B:2, C:3, D:4, E:5, F:6, G:7, H:8, I:9, J:10,
+			K:11, L:12, M:13, N:14, O:15, P:16, Q:17, R:18, S:19, T:20,
+			U:21, V:22, W:23, X:24, Y:25, Z:26
+		};
+
+		return names[name];
+	}
 
 	d3.tsv("data.tsv", type, function(error, data){
 
@@ -87,6 +98,28 @@
 		  	 .attr("y", function(d) { return y(d.value); })
 		  	 .attr("height", function(d) { return (height - y(d.value)); })
 		  	 .attr("width", x.rangeBand());
+
+		d3.select("input").on("change", function() {
+
+			var sortByValue = function(a,b) { return (b.value - a.value); };
+			var sortByLetters = function(a,b) { return d3.ascending(nameIndex(a.name), nameIndex(b.name)); };
+			var sortedNames = data.sort(this.checked ? sortByValue : sortByLetters)
+								  .map(function(d) { return d.name; })
+
+			x.domain(sortedNames);
+
+			var transition = chart.transition().duration(750);
+			var delay = function(d,i) { return i*50; };
+
+			transition.selectAll(".bar")
+					  .delay(delay)
+					  .attr("x", function(d) { return x(d.name); });
+
+			transition.select(".x.axis")
+					  .call(xAxis)
+					 .selectAll("g")
+					  .delay(delay); 
+		})
 	});
 
 	function type(d) {
