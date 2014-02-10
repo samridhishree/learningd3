@@ -8,7 +8,13 @@
 }
 
 .axis text {
+  font: 11px sans-serif;
+}
+
+.bar text {
+  fill: white;
   font: 10px sans-serif;
+  text-anchor: middle;
 }
 
 .axis path,
@@ -24,13 +30,22 @@
 
 .bar:hover {
 	fill: brown;
-}	
+}
+
+.cong {
+	fill: red;
+}
+
+.bjp {
+	fill: orange;
+}
+
 
 </style>
-<h1>The Frequency Chart</h1>
+<h1>India GDP Rates</h1>
 <svg class="chart"></svg>
 <br />
-<input type=	checkbox>Sort</input>
+<input type=checkbox>Sort</input>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
 	
@@ -83,22 +98,27 @@
 
 		chart.append("g")
 			 .attr("class", "y axis")
-			 .call(yAxis)
-			.append("text")
-			 .attr("transform", "rotate(-90)")
-			 .attr("y", 16)
-			 .attr("dy", ".20em")
-			 .style("text-anchor", "end")
-			 .text("Frequency");
+			 .call(yAxis);
+			// .append("text")
+			//  .attr("transform", "rotate(-90)")
+			//  .attr("y", 6)
+			//  .attr("dy", ".15em")
+			//  .style("text-anchor", "end")
+			//  .text("India's Growth Rate in GDP");
 		
 		chart.selectAll(".bar")
 			 .data(data)
 		  .enter().append("rect")
-		  	 .attr("class", "bar")
+		  	 .attr("class", function(d) { return (d.party + " bar"); })
 		  	 .attr("x", function(d) { return x(d.name); })
 		  	 .attr("y", function(d) { return y(d.value); })
 		  	 .attr("height", function(d) { return (height - y(d.value)); })
-		  	 .attr("width", x.rangeBand());
+		  	 .attr("width", x.rangeBand())
+		  	 .append("text")
+      		 .attr("x", x.rangeBand() / 2)
+      		 .attr("y", function(d) { return y(d.value) + 3; })
+      		 .attr("dy", ".75em")
+      		 .text(function(d) { return d.value; });
 
 		d3.select("input").on("change", function() {
 
