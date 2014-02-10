@@ -99,12 +99,6 @@
 		chart.append("g")
 			 .attr("class", "y axis")
 			 .call(yAxis);
-			// .append("text")
-			//  .attr("transform", "rotate(-90)")
-			//  .attr("y", 6)
-			//  .attr("dy", ".15em")
-			//  .style("text-anchor", "end")
-			//  .text("India's Growth Rate in GDP");
 		
 		chart.selectAll(".bar")
 			 .data(data)
@@ -114,12 +108,7 @@
 		  	 .attr("y", function(d) { return y(d.value); })
 		  	 .attr("height", function(d) { return (height - y(d.value)); })
 		  	 .attr("width", x.rangeBand())
-		  	 .append("text")
-      		 .attr("x", x.rangeBand() / 2)
-      		 .attr("y", function(d) { return y(d.value) + 3; })
-      		 .attr("dy", ".75em")
-      		 .text(function(d) { return d.value; });
-
+		  	
 		d3.select("input").on("change", function() {
 
 			var sortByValue = function(a,b) { return (b.value - a.value); };
